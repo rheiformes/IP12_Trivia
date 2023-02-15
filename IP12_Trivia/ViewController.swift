@@ -7,24 +7,100 @@
 
 import UIKit
 
-class ViewController: UIViewController {
+class ViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSource {
+    
+    
 
     var allQuestions: [String: [Trivia]] = [:] //stores all of the trivia
+    var allCategories: [String] = []
     // [String - Category: [Trivia(), Trivia(), Trivia() ... etc (questions)]
     
+    @IBOutlet var userCategoryPicker: UIPickerView!
+    @IBOutlet var userNumQuestionsPicker: UIPickerView!
+    
+    var maxQuestions: Int = 1
+    var userNumQuestions: Int = 0
+    var userCategory: String = ""
+    
+    /* MUST RUN AT THE BEGGINING */
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
         loadQuestions()
+        allCategories = Array(allQuestions.keys) as [String]
+        
+        
         print("ViewController - ViewDidLoad with \(allQuestions.count) categories")
     }
+
+    
+    /* SET UP THE PICKERS */
+    //TODO: make this a double picker. figure out why it isn't showing up (???)
+    
+    //note - using this for example: https://codewithchris.com/uipickerview-example/
+    //cat
+    func setCategoryPicker() {
+        self.userCategoryPicker.delegate = self as UIPickerViewDelegate
+        self.userCategoryPicker.dataSource = self as UIPickerViewDataSource
+               
+        
+    }
+    
+    //means - how many it should select
+    func numberOfComponents(in pickerView: UIPickerView) -> Int {
+        return 1
+    }
+    
+    //means - how many total
+    func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
+        //print("ran")
+        return self.allCategories.count
+        
+    }
+    
+    //means - whats the value of that row
+    func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
+        return self.allCategories[row]
+    }
+    
+    //number
+//    func setNumberPicker() {
+//        self.userNumQuestionsPicker.delegate = self as UIPickerViewDelegate
+//        self.userNumQuestionsPicker.dataSource = self as UIPickerViewDataSource
+//    }
+    
+    
+    /* USER MAKING CHOICES */
+    func storeUserCategoryChoice() {
+        
+        
+    }
+    
+    func storeUserNumberChoice(){
+        
+    }
+    
+
     
     
     
     
     
-    //to fold: command optoin left click
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    /* DONT TOUCH THIS, ITS VERY LONG*/
+    //to fold: select all, command optoin shift left arrow
     func loadQuestions() {
+    
         //all: [String: [Trivia] ]
         /*1 - General knowledge*/
         allQuestions =
@@ -967,7 +1043,6 @@ class ViewController: UIViewController {
         ]
 
     }
-
 
 }
 
