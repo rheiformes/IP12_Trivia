@@ -10,58 +10,105 @@ import UIKit
 class ViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSource {
     
     
-
-    var allQuestions: [String: [Trivia]] = [:] //stores all of the trivia
-    var allCategories: [String] = []
-    // [String - Category: [Trivia(), Trivia(), Trivia() ... etc (questions)]
-    
     @IBOutlet var userCategoryPicker: UIPickerView!
     @IBOutlet var userNumQuestionsPicker: UIPickerView!
     
-    var maxQuestions: Int = 1
     var userNumQuestions: Int = 0
     var userCategory: String = ""
-    
+
+    var doublePicker: [[String]] = []
+    var chosenCategory: String = ""
     /* MUST RUN AT THE BEGGINING */
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
-        loadQuestions()
-        allCategories = Array(allQuestions.keys) as [String]
         
         
-        print("ViewController - ViewDidLoad with \(allQuestions.count) categories")
+        //picker
+        try! setPickerInitial()
+        self.userCategoryPicker.delegate = self
+        self.userCategoryPicker.dataSource = self
+        //self.userCategoryPicker
     }
 
     
     /* SET UP THE PICKERS */
-    //TODO: make this a double picker. figure out why it isn't showing up (???)
+    
+    //DONE: make this a double picker
+    //TODO: figure out how to dynamically change the # based on cat chosen in picker
+    //TODO: fix the main storyboard so it just has 1 double picker
     
     //note - using this for example: https://codewithchris.com/uipickerview-example/
-    //cat
-    func setCategoryPicker() {
-        self.userCategoryPicker.delegate = self as UIPickerViewDelegate
-        self.userCategoryPicker.dataSource = self as UIPickerViewDataSource
-               
-        
+
+    func setPickerInitial()  throws {
+        self.chosenCategory = Trivia.getCategories()[0] //temp: start at 1st cat
+        self.doublePicker = [Trivia.getCategories(),
+                             makeNumberedStringArray(count: try Trivia.getQuestionCountofCategory(categoryName: self.chosenCategory))]
     }
     
-    //means - how many it should select
+    func makeNumberedStringArray(count: Int) -> [String] {
+        var numberedStringArray: [String] = [""]
+        for i in 1...count {
+            numberedStringArray.insert(String(i), at: i-1)
+        }
+        return numberedStringArray
+    }
+    
+    
+    //number of columns of data
     func numberOfComponents(in pickerView: UIPickerView) -> Int {
-        return 1
+        return 2 //for the 2 options: category and num
     }
     
-    //means - how many total
+    //number of roaws of data
     func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
-        //print("ran")
-        return self.allCategories.count
-        
+        return doublePicker[1].count
     }
     
-    //means - whats the value of that row
-    func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
-        return self.allCategories[row]
+    
+    // data that's returned
+    func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String?  {
+        print("called PV")
+               
+        return doublePicker[component][row]
     }
+    
+    //detect what the user enters. triggered any time the picker is changed
+    func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
+        //TODO: figure out why this doesn't work
+        
+        var selectedCategory: String = self.doublePicker[row][component]
+        if selectedCategory != self.chosenCategory {
+            self.chosenCategory = selectedCategory
+            
+            self.doublePicker = [Trivia.getCategories(),
+                                 makeNumberedStringArray(count: try! Trivia.getQuestionCountofCategory(categoryName: self.chosenCategory))]
+            
+        }
+    }
+    
+    
+//    func setCategoryPicker() {
+//        self.userCategoryPicker.delegate = self as UIPickerViewDelegate
+//        self.userCategoryPicker.dataSource = self as UIPickerViewDataSource
+//    }
+//
+//    //means - how many it should select
+//    func numberOfComponents(in pickerView: UIPickerView) -> Int {
+//        return 1
+//    }
+//
+//    //means - how many total
+//    func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
+//        //print("ran")
+//        return self.allCategories.count
+//
+//    }
+//
+//    //means - whats the value of that row
+//    func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
+//        return self.allCategories[row]
+//    }
     
     //number
 //    func setNumberPicker() {
@@ -99,7 +146,7 @@ class ViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSo
     
     /* DONT TOUCH THIS, ITS VERY LONG*/
     //to fold: select all, command optoin shift left arrow
-    func loadQuestions() {
+    /*func loadQuestions() {
     
         //all: [String: [Trivia] ]
         /*1 - General knowledge*/
@@ -1042,7 +1089,7 @@ class ViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSo
         ],
         ]
 
-    }
+    } */
 
 }
 

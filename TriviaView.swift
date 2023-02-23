@@ -15,6 +15,54 @@ class TriviaView: UIViewController {
         // Do any additional setup after loading the view.
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        resetRound()
+    }
+    
+    func resetRound() {
+        
+    }
+    
+    func loadNewQuestion() {
+        
+    }
+    
+    func timerRunner(){
+        
+    }
+    
+    func increaseScore(){
+        
+    }
+    
+    func increaseProgress() {
+        
+        
+        adjustProgressView()
+        
+        if (hasReachedLastQuestion()) {
+            endRound()
+        }
+        else {
+            loadNewQuestion()
+        }
+    }
+    
+    func adjustProgressView() {
+        
+    }
+    
+    func hasReachedLastQuestion() -> Bool {
+     
+        
+        
+        return false
+    }
+    
+    func endRound() {
+        
+    }
+    
 
     /*
     // MARK: - Navigation
