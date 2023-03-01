@@ -11,6 +11,11 @@ class Trivia {
     var question: String = ""
     var correct: String = ""
     var incorrect: [String] = []
+    
+    static var chosenCategory: String = ""
+    static var chosenNumQuestions: Int = 1
+    
+    
     //to fold the instanciation: select the '[', option + cmd + left click -> fold
     static let questionsDB: [String: [Trivia]] =  [
         "General Knowledge" :
