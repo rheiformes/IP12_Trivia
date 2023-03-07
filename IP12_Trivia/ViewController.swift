@@ -17,8 +17,8 @@ class ViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSo
     var userCategory: String = ""
 
     var doublePicker: [[String]] = []
-    var chosenCategory: String = ""
-    var chosenNumQuestions: Int = 1
+    //var chosenCategory: String = ""
+    //var chosenNumQuestions: Int = 1
     @IBOutlet var chosenCatNumDisplayLbl: UILabel!
     /* MUST RUN AT THE BEGGINING */
     override func viewDidLoad() {
@@ -43,10 +43,10 @@ class ViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSo
     //note - using this for example: https://codewithchris.com/uipickerview-example/
 
     func setPickerInitial()  throws {
-        self.chosenCategory = Trivia.getCategories()[0] //temp: start at 1st cat
-        self.chosenNumQuestions = 1
+        Trivia.chosenCategory = Trivia.getCategories()[0] //temp: start at 1st cat
+        Trivia.chosenNumQuestions = 1
         self.doublePicker = [Trivia.getCategories(),
-                             makeNumberedStringArray(count: try Trivia.getQuestionCountofCategory(categoryName: self.chosenCategory))]
+                             makeNumberedStringArray(count: try Trivia.getQuestionCountofCategory(categoryName: Trivia.chosenCategory))]
         self.userCategoryPicker.selectRow(0, inComponent: 0, animated: true)
         updateUI()
     }
@@ -87,28 +87,28 @@ class ViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSo
         print ( "component: \(component), row: \(row)")
         
         if component == 0 {
-            var selectedCategory: String = Trivia.getCategories()[row]
+            let selectedCategory: String = Trivia.getCategories()[row]
             print(selectedCategory)
-            if selectedCategory != self.chosenCategory {
-                self.chosenCategory = selectedCategory
+            if selectedCategory != Trivia.chosenCategory {
+                Trivia.chosenCategory = selectedCategory
                 
                 self.doublePicker = [Trivia.getCategories(),
-                                     makeNumberedStringArray(count:   try! Trivia.getQuestionCountofCategory(categoryName: self.chosenCategory))]
+                                     makeNumberedStringArray(count:   try! Trivia.getQuestionCountofCategory(categoryName: Trivia.chosenCategory))]
                 
             }
         }
         else if component == 1 {
-            self.chosenNumQuestions = row + 1 //since it's indexed from 0
-            if self.chosenNumQuestions >  (try! Trivia.getQuestionCountofCategory(categoryName: self.chosenCategory)) {
-                self.chosenNumQuestions =  try! Trivia.getQuestionCountofCategory(categoryName: self.chosenCategory)
+            Trivia.chosenNumQuestions = row + 1 //since it's indexed from 0
+            if Trivia.chosenNumQuestions >  (try! Trivia.getQuestionCountofCategory(categoryName: Trivia.chosenCategory)) {
+                Trivia.chosenNumQuestions =  try! Trivia.getQuestionCountofCategory(categoryName: Trivia.chosenCategory)
             }
-            else if self.chosenNumQuestions < 1 {
-                self.chosenNumQuestions = 1
+            else if Trivia.chosenNumQuestions < 1 {
+                Trivia.chosenNumQuestions = 1
             }
                 
         }
         
-        print ("category: \(self.chosenCategory), with questions: \(self.chosenNumQuestions)")
+        print ("category: \(Trivia.chosenCategory), with questions: \(Trivia.chosenNumQuestions)")
         updateUI()
         
         /*
@@ -117,8 +117,8 @@ class ViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSo
     }
     
     func updateUI() {
-        var tempString = "\(self.chosenCategory) with \(String (self.chosenNumQuestions)) question"
-        if (self.chosenNumQuestions > 1) {
+        var tempString = "\(Trivia.chosenCategory) with \(String (Trivia.chosenNumQuestions)) question"
+        if (Trivia.chosenNumQuestions > 1) {
             tempString.append("s")
         }
         chosenCatNumDisplayLbl.text = tempString
